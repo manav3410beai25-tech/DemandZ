@@ -73,6 +73,35 @@ The application checks the connection and required tables before displaying its 
 - Recording a sale inserts the sale and subtracts stock in one JDBC transaction. Either both changes commit or both roll back.
 - Predictions and reorder recommendations are calculated from the services at runtime.
 
+## Advanced reporting and analytics
+
+Choose **5. Advanced Reporting & Analytics** from the main menu. Reports are calculated from the current MySQL data each time the analytics menu opens; no report totals are stored in the database. Available reports include:
+
+- Inventory overview with product count, stock units, valuation, and low/out-of-stock counts.
+- Sales overview and average transaction value.
+- Top five products by units sold and by estimated revenue.
+- Calendar month and year sales totals.
+- Product performance by product ID, including transaction count and first/latest sale dates.
+- Inventory health: low stock, out of stock, products without sales, and the top five products by units sold as high-demand products.
+- Inclusive custom date-range sales totals and product breakdown. Enter dates as `YYYY-MM-DD`; the start and end dates are both included.
+
+Inventory valuation is `SUM(current_stock * current unit_price)`. The schema does not save a price on each sale, so all sales revenue figures are estimates calculated as `SUM(quantity_sold * the product's current unit_price)`. These estimates can differ from the amount actually charged when a sale was recorded.
+
+Monthly reports group sales by calendar year and month, so the same month in different years is shown separately. Currency values are displayed in Indian rupees (₹). Low-stock and out-of-stock lists are separate: low stock means a positive quantity at or below the product's minimum stock level; zero stock is reported as out of stock.
+
+Example terminal output:
+
+```text
+--- Sales Overview ---
+Sales transactions: 12
+Units sold: 47
+Estimated revenue (using current product prices): ₹28,145.00
+Average estimated transaction value: ₹2,345.42
+Revenue is an estimate; historical sale prices are not stored.
+```
+
+Date-range reports use parameterized date filters and include a product-wise breakdown. To speed up date-range queries on an existing database, run `database/migrations/phase9_add_sale_date_index.sql` while connected to the `demandx` database. The script only adds an index when it is missing and does not change sales or inventory rows. New installations get the same index from `database/schema.sql`.
+
 ## Troubleshooting
 
 - **`config/db.properties` not found:** copy the example file and add local credentials.

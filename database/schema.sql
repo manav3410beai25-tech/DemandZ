@@ -32,5 +32,6 @@ CREATE TABLE IF NOT EXISTS sales (
         REFERENCES products (product_id)
         ON UPDATE CASCADE
         ON DELETE RESTRICT,
-    INDEX idx_sales_product_date (product_id, sale_date)
+    INDEX idx_sales_product_date (product_id, sale_date),
+    INDEX idx_sales_sale_date (sale_date)
 ) ENGINE=InnoDB;

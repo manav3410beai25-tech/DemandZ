@@ -1,14 +1,17 @@
 import config.DatabaseConfig;
+import dao.AnalyticsDAO;
 import dao.ProductDAO;
 import dao.SalesDAO;
 import database.CsvMigrationService;
 import database.DatabaseConnection;
 import database.DatabaseException;
 import service.ProductService;
+import service.AnalyticsService;
 import service.PredictionService;
 import service.ReorderService;
 import service.SalesService;
 import ui.ProductManagementMenu;
+import ui.AnalyticsMenu;
 import ui.PredictionMenu;
 import ui.ReorderManagementMenu;
 import ui.SalesManagementMenu;
@@ -51,8 +54,10 @@ public class Main {
 
             ProductDAO productDAO = new ProductDAO(databaseConnection);
             SalesDAO salesDAO = new SalesDAO(databaseConnection);
+            AnalyticsDAO analyticsDAO = new AnalyticsDAO(databaseConnection);
             ProductService productService = new ProductService(productDAO);
             SalesService salesService = new SalesService(productService, salesDAO, databaseConnection);
+            AnalyticsService analyticsService = new AnalyticsService(analyticsDAO);
 
             if (args.length == 1 && args[0].equals("--migrate-csv")) {
                 CsvMigrationService migrationService = new CsvMigrationService(databaseConnection, productDAO, salesDAO);
@@ -76,6 +81,7 @@ public class Main {
             SalesManagementMenu salesMenu = new SalesManagementMenu(salesService, scanner);
             PredictionMenu predictionMenu = new PredictionMenu(predictionService, scanner);
             ReorderManagementMenu reorderMenu = new ReorderManagementMenu(reorderService, scanner);
+            AnalyticsMenu analyticsMenu = new AnalyticsMenu(analyticsService, scanner);
 
             boolean running = true;
             while (running) {
@@ -87,7 +93,8 @@ public class Main {
                 System.out.println("2. Sales Management");
                 System.out.println("3. Demand Analysis & Prediction");
                 System.out.println("4. Smart Reorder Recommendations");
-                System.out.println("5. Exit");
+                System.out.println("5. Advanced Reporting & Analytics");
+                System.out.println("6. Exit");
                 System.out.print("Enter your choice: ");
                 String choice = scanner.nextLine().trim();
 
@@ -96,8 +103,9 @@ public class Main {
                     case "2" -> salesMenu.run();
                     case "3" -> predictionMenu.run();
                     case "4" -> reorderMenu.run();
-                    case "5" -> running = false;
-                    default -> System.out.println("Please enter 1, 2, 3, 4 or 5.");
+                    case "5" -> analyticsMenu.run();
+                    case "6" -> running = false;
+                    default -> System.out.println("Please enter 1, 2, 3, 4, 5 or 6.");
                 }
             }
             System.out.println("DemandX closed. Goodbye!");
