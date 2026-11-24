@@ -1,0 +1,15 @@
+# Local database credentials must never be committed.
+config/db.properties
+
+# Build output
+target/
+out/
+
+# Editor and OS files
+.DS_Store
+.vscode/*
+!.vscode/launch.json
+!.vscode/settings.json
+
+# Compiled Java classes
+*.class

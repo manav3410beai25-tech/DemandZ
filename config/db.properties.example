@@ -1,0 +1,4 @@
+# Copy this file to config/db.properties and fill in your local credentials.
+database.url=jdbc:mysql://localhost:3306/demandx?serverTimezone=UTC
+database.username=root
+database.password=
