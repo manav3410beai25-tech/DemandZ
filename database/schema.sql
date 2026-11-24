@@ -1,8 +1,8 @@
-CREATE DATABASE IF NOT EXISTS demandx
+CREATE DATABASE IF NOT EXISTS demandz
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_0900_ai_ci;
 
-USE demandx;
+USE demandz;
 
 CREATE TABLE IF NOT EXISTS products (
     product_id VARCHAR(64) NOT NULL,

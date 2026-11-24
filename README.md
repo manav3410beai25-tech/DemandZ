@@ -1,6 +1,6 @@
-# DemandX
+# DemandZ
 
-DemandX is a Java 21 terminal application for managing inventory and sales, analyzing demand, predicting stockout risk, and suggesting reorder quantities. Product and sale records now live in MySQL. Demand and reorder results continue to be calculated by the Java services and are not stored in the database.
+DemandZ is a Java 21 application for managing inventory and sales, analyzing demand, predicting stockout risk, and suggesting reorder quantities. It includes both a clean Swing GUI and an interactive terminal mode. Product and sale records can be stored in MySQL or run in offline CSV mode.
 
 ## Requirements
 
@@ -58,10 +58,40 @@ mvn exec:java -Dexec.args="--migrate-csv"
 
 Migration imports products first, then sales, in one transaction. It preserves product stock exactly as it appears in the CSV; importing sales history does not reduce stock. Existing database records with the same IDs are skipped and left unchanged. Malformed CSV rows are reported and skipped. The CSV files remain in place as backups.
 
-## 5. Run DemandX
+## 5. Run DemandZ
+
+### Quick Launch (Using Run File)
+Simply double-click or execute **`run.bat`** (or `run.ps1` in PowerShell):
+
+```bat
+run.bat
+```
+*(Or in PowerShell: `.\run.ps1`)*
+
+This script automatically gathers source files, compiles them, includes the bundled MySQL connector in `lib/`, and starts DemandZ. It also accepts arguments (e.g. `run.bat --cli` or `run.bat --migrate-csv`).
+
+### Launching via Maven
+To launch the graphical interface:
 
 ```sh
 mvn exec:java
+```
+*(or explicitly with `mvn exec:java -Dexec.args="--gui"`)*
+
+The Swing GUI provides a clean, intuitive window with five dedicated tabs:
+- **📦 Products:** View product tables, instant search by ID or name, filter low-stock items, add new products, edit existing ones, or delete products with full stock validation.
+- **🛒 Sales:** View recorded sales history, filter by product ID, and record new sales with instant atomic stock deduction and validation against current stock.
+- **📈 Demand Predictions:** Calculate explainable demand estimates and stockout risk over 7, 30, 90, or custom calendar days. Features color-coded risk tags (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, `NO_DATA`) and risk-based sorting.
+- **🔔 Reorder Recommendations:** Review calculated safety stock, reorder points, target stock, and suggested order quantities. Includes a quick filter to view only products needing immediate reorder (`ORDER_NOW`).
+- **📊 Reports & Analytics:** Business KPI overview cards (Total Products, Units in Stock, Inventory Valuation in ₹, Low/Out of Stock counts, Units Sold, and Estimated Revenue), plus detailed report sub-tabs for Top 5 Best Sellers, Monthly Sales, Inventory Health, Custom Date-Range Sales, and Individual Product Performance.
+
+If `config/db.properties` is missing or the database connection cannot be established at startup, the GUI will present a connection setup dialog allowing you to enter your credentials and save them directly.
+
+### Terminal CLI Mode
+To run DemandX in terminal mode:
+
+```sh
+mvn exec:java -Dexec.args="--cli"
 ```
 
 The application checks the connection and required tables before displaying its menus. It does not fall back to an empty in-memory inventory if MySQL is unavailable.
